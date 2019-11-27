@@ -1,0 +1,32 @@
+################################################################################
+# Node-RED Compose
+################################################################################
+# docker-compose -f docker-compose.yml -p myNoderedProject up
+################################################################################
+version: "3.7"
+
+services:
+  node-red:
+    build: .
+    command: npm start
+    environment:
+      - TZ=Europe/Vienna
+    ports:
+      - "1880:1880"
+    networks:
+      - node-red-net
+    volumes:
+      - node-red-data
+    restart: unless-stopped
+    container_name: mynodered
+
+  gpiod:
+    image: corbosman/pigpiod
+    privileged: true
+    restart: unless-stopped
+
+volumes:
+  node-red-data:
+
+networks:
+  node-red-net:
