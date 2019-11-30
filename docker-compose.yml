@@ -7,7 +7,7 @@ version: "3.7"
 
 services:
   node-red:
-    build: .
+    build: ./node-red
     command: npm start
     environment:
       - TZ=Europe/Vienna
@@ -16,7 +16,7 @@ services:
     networks:
       - node-red-net
     volumes:
-      - node-red-data
+      - node-red-data:/data
     restart: unless-stopped
     container_name: mynodered
 
@@ -25,8 +25,17 @@ services:
     privileged: true
     restart: unless-stopped
 
+  vnstat:
+    image: vimagick/vnstat
+    volumes:
+      - vnstat-data:/var/lib/vnstat
+    # net: host
+    restart: always
+    container_name: myvnstat
+
 volumes:
   node-red-data:
+  vnstat-data:
 
 networks:
   node-red-net:
