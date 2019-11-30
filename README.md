@@ -10,7 +10,7 @@ Use:
 ```bash
 docker-compose build
 
-docker-compose -d -p myNoderedProject up
+docker-compose -d -p myNodered up
 ```
 
 ```bash
