@@ -1,9 +1,16 @@
 # Node-RED-Liechtenstein
  Node-RED für Liechtenstein
 
+To create the volume
+```bash
+docker volume create node-red-data
+```
+
 Use:
 ```bash
 docker-compose build
+
+docker-compose -d -p myNoderedProject up
 ```
 
 ```bash
