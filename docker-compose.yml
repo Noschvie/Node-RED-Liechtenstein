@@ -25,17 +25,8 @@ services:
     privileged: true
     restart: unless-stopped
 
-  vnstat:
-    image: vimagick/vnstat
-    volumes:
-      - vnstat-data:/var/lib/vnstat
-    # net: host
-    restart: always
-    container_name: myvnstat
-
 volumes:
   node-red-data:
-  vnstat-data:
 
 networks:
   node-red-net:
