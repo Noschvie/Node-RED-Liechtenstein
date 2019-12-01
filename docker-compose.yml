@@ -25,8 +25,29 @@ services:
     privileged: true
     restart: unless-stopped
 
+  rpi-monitor:
+# https://rpi-experiences.blogspot.de/2018/02/rpi-monitor-docker-container.html
+# https://github.com/michaelmiklis/docker-rpi-monitor/issues/1
+    container_name: myrpimon
+    image: michaelmiklis/rpi-monitor
+    restart: unless-stopped
+    ports:
+      - "8888:8888"
+    devices:
+      - "/dev/vchiq"
+      - "/dev/vcs"
+    volumes:
+      - /opt/vc:/opt/vc/
+      - /boot/:/boot/
+      - /sys/:/dockerhost/sys/:ro
+      - /etc/:/dockerhost/etc/:ro
+      - /proc/:/dockerhost/proc/:ro
+      - /usr/lib/:/dockerhost/usr/lib/:ro
+      - myrpimon-data:/var/lib/rpimonitor/stat/
+
 volumes:
   node-red-data:
+  myrpimon-data:
 
 networks:
   node-red-net:
