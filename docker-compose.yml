@@ -6,11 +6,43 @@
 version: "3.7"
 
 services:
+
+  vpn:
+    image: dperson/openvpn-client
+    # cap_add, security_opt, and volume required for the image to function
+    cap_add:
+      - net_admin
+    environment:
+      TZ: 'Europe/Vienna'
+    networks:
+      - node-red-net
+    read_only: true
+    tmpfs:
+      - /run
+      - /tmp
+    restart: unless-stopped
+    security_opt:
+      - label:disable
+    stdin_open: true
+    tty: true
+    volumes:
+      - /dev/net:/dev/net:z
+      - ./vpn:/vpn
+    # Put .ovpn configuration file in the /vpn directory (in "volumes:" above or
+    # launch using the command line arguments, IE pick one:
+    #  - ./vpn:/vpn
+    # command: 'server;user;password[;port]'
+
   rpi-monitor:
 # https://rpi-experiences.blogspot.de/2018/02/rpi-monitor-docker-container.html
 # https://github.com/michaelmiklis/docker-rpi-monitor/issues/1
     container_name: myrpimon
     image: michaelmiklis/rpi-monitor
+    depends_on:
+      - vpn
+    environment:
+      TZ: 'Europe/Vienna'
+    network_mode: "service:vpn"
     restart: unless-stopped
     ports:
       - "8888:8888"
@@ -29,8 +61,10 @@ services:
   node-red:
     build: ./node-red
     command: npm start
+    depends_on:
+      - vpn
     environment:
-      - TZ=Europe/Vienna
+      TZ: 'Europe/Vienna'
     ports:
       - "1880:1880"
     networks:
@@ -44,6 +78,31 @@ services:
     image: corbosman/pigpiod
     privileged: true
     restart: unless-stopped
+
+  web:
+    image: dperson/nginx
+    depends_on:
+      - node-red
+    environment:
+      TZ: 'Europe/Vienna'
+    links:
+      - vpn:node-red
+    networks:
+      - node-red-net
+    ports:
+      - "80:80"
+      - "443:443"
+    read_only: true
+    tmpfs:
+      - /run
+      - /tmp
+      - /var/cache/nginx
+    restart: unless-stopped
+    stdin_open: true
+    tty: true
+    command: -w "http://node-red:8888;/node-red"
+    # service1 shares the network stack of vpn. The service can by reached using
+    # the name of the service as a hostname.
 
 volumes:
   rpimon-data:
