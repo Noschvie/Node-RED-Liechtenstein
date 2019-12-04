@@ -43,11 +43,11 @@ services:
       - /etc/:/dockerhost/etc/:ro
       - /proc/:/dockerhost/proc/:ro
       - /usr/lib/:/dockerhost/usr/lib/:ro
-      - myrpimon-data:/var/lib/rpimonitor/stat/
+      - rpimon-data:/var/lib/rpimonitor/stat/
 
 volumes:
   node-red-data:
-  myrpimon-data:
+  rpimon-data:
 
 networks:
   node-red-net:
