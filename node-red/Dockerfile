@@ -7,7 +7,7 @@ USER root
 RUN echo "Europe/Vienna" > /etc/timezone
 # RUN dpkg-reconfigure -f noninteractive tzdata
 
-RUN npm install --save node-red-dashboard node-red-contrib-influxdb node-red-contrib-loxone
+RUN npm install --save node-red-dashboard node-red-contrib-influxdb node-red-contrib-loxone node-red-contrib-modbus
 
 WORKDIR /usr/src/node-red
 
