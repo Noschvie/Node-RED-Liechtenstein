@@ -6,25 +6,6 @@
 version: "3.7"
 
 services:
-  node-red:
-    build: ./node-red
-    command: npm start
-    environment:
-      - TZ=Europe/Vienna
-    ports:
-      - "1880:1880"
-    networks:
-      - node-red-net
-    volumes:
-      - node-red-data:/data
-    restart: unless-stopped
-    container_name: mynodered
-
-  gpiod:
-    image: corbosman/pigpiod
-    privileged: true
-    restart: unless-stopped
-
   rpi-monitor:
 # https://rpi-experiences.blogspot.de/2018/02/rpi-monitor-docker-container.html
 # https://github.com/michaelmiklis/docker-rpi-monitor/issues/1
@@ -45,9 +26,28 @@ services:
       - /usr/lib/:/dockerhost/usr/lib/:ro
       - rpimon-data:/var/lib/rpimonitor/stat/
 
+  node-red:
+    build: ./node-red
+    command: npm start
+    environment:
+      - TZ=Europe/Vienna
+    ports:
+      - "1880:1880"
+    networks:
+      - node-red-net
+    volumes:
+      - node-red-data:/data
+    restart: unless-stopped
+    container_name: mynodered
+
+  gpiod:
+    image: corbosman/pigpiod
+    privileged: true
+    restart: unless-stopped
+
 volumes:
-  node-red-data:
   rpimon-data:
+  node-red-data:
 
 networks:
   node-red-net:
