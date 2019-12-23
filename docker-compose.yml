@@ -7,39 +7,11 @@ version: "3.7"
 
 services:
 
-  vpn:
-    image: dperson/openvpn-client
-    # cap_add, security_opt, and volume required for the image to function
-    cap_add:
-      - net_admin
-    environment:
-      TZ: 'Europe/Vienna'
-    networks:
-      - node-red-net
-    read_only: true
-    tmpfs:
-      - /run
-      - /tmp
-    restart: unless-stopped
-    security_opt:
-      - label:disable
-    stdin_open: true
-    tty: true
-    volumes:
-      - /dev/net:/dev/net:z
-      - ./vpn:/vpn
-    # Put .ovpn configuration file in the /vpn directory (in "volumes:" above or
-    # launch using the command line arguments, IE pick one:
-    #  - ./vpn:/vpn
-    # command: 'server;user;password[;port]'
-
   rpi-monitor:
 # https://rpi-experiences.blogspot.de/2018/02/rpi-monitor-docker-container.html
 # https://github.com/michaelmiklis/docker-rpi-monitor/issues/1
     container_name: myrpimon
     image: michaelmiklis/rpi-monitor
-    depends_on:
-      - vpn
     environment:
       TZ: 'Europe/Vienna'
     network_mode: "service:vpn"
@@ -59,24 +31,34 @@ services:
       - rpimon-data:/var/lib/rpimonitor/stat/
 
   node-red:
+    container_name: mynodered
     build: ./node-red
     command: npm start
-    depends_on:
-      - vpn
     environment:
       TZ: 'Europe/Vienna'
+    restart: unless-stopped
+    depends_on:
+      - vpn
+      - mqtt
     ports:
       - "1880:1880"
     networks:
       - node-red-net
     volumes:
       - node-red-data:/data
-    restart: unless-stopped
-    container_name: mynodered
 
   gpiod:
     image: corbosman/pigpiod
     privileged: true
+    restart: unless-stopped
+
+  mqtt:
+    image: "eclipse-mosquitto"
+    ports:
+      - "1883:1883"
+      - "9001:9001"
+    volumes:
+      - mqtt-data:/mosquitto
     restart: unless-stopped
 
   web:
@@ -107,6 +89,7 @@ services:
 volumes:
   rpimon-data:
   node-red-data:
+  mqtt-data:
 
 networks:
   node-red-net:
