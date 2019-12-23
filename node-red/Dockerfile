@@ -9,7 +9,7 @@ RUN echo "Europe/Vienna" > /etc/timezone
 
 RUN npm install --save node-red-dashboard node-red-contrib-influxdb node-red-contrib-modbus
 
-RUN npm install --save node-red-contrib-loxone@0.10.4
+RUN npm install --save node-red-contrib-loxone@0.10.3
 
 WORKDIR /usr/src/node-red
 
