@@ -10,6 +10,7 @@ RUN echo "Europe/Vienna" > /etc/timezone
 RUN npm install --unsafe-perm node-red-dashboard node-red-contrib-influxdb node-red-contrib-modbus
 
 # RUN npm install --unsafe-perm node-red-contrib-loxone
+RUN npm install node-red-contrib-loxone
 RUN npm install --unsafe-perm node-red-contrib-cpu node-red-contrib-ccu
 
 WORKDIR /usr/src/node-red
