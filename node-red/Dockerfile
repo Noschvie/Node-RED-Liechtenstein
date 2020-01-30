@@ -1,5 +1,6 @@
 # Datei Dockerfile
-FROM nodered/node-red:latest
+# FROM nodered/node-red:latest
+FROM nodered/node-red:latest-12-minimal
 
 LABEL maintaner "norbert.schlemmer@neunzehn.at"
 
