@@ -9,7 +9,6 @@ RUN echo "Europe/Vienna" > /etc/timezone
 
 RUN apt-get -y install git
 
-RUN npm install --save node-red-dashboard node-red-contrib-influxdb node-red-contrib-modbus
 
 # RUN npm install --save node-red-contrib-loxone
 
